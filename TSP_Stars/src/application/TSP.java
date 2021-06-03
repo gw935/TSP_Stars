@@ -17,7 +17,7 @@ public class TSP
       ReadFile readFile = null;
       try
       {
-         readFile = new ReadFile(Main.FILENAME2);
+         readFile = new ReadFile(Main.FILENAME0);
       }
       catch (IOException e)
       {
@@ -137,7 +137,7 @@ public class TSP
          tsp.add(currentStar);
          currentStar.setVisited(true);
          indexCurrentStar = indexShortestEdge;
-         //System.out.println(shortestEdge);
+         System.out.println(shortestEdge);
          completeDist += shortestEdge;
          // 5. If all the vertices in the domain are visited, then terminate.
          // Else, go to step 3.
