@@ -17,7 +17,7 @@ public class TSP
       ReadFile readFile = null;
       try
       {
-         readFile = new ReadFile(Main.FILENAME0);
+         readFile = new ReadFile(Main.FILENAME3);
       }
       catch (IOException e)
       {
@@ -30,23 +30,17 @@ public class TSP
       List<Star> starList = readFile.getListOfStars();
       // printStars(starList);
 
+      // TSP berechnen und zeitmessung
       long start, result;
       start = System.currentTimeMillis();
-
-      // berechne alles Distanzen
-      double[][] starDist = calcDists(starList);
-
+      List<Star> tsp = nearestNeighbourAlgorithm(starList);
       result = System.currentTimeMillis() - start;
-      System.out.println("Dauer aller Distanz berechnungen: " + result + " ms");
-
-      // TSP berechnen und zeitmessung
-      start = System.currentTimeMillis();
-      List<Star> tsp = nearestNeighbourAlgorithm(starList, starDist);
-      result = System.currentTimeMillis() - start;
-      System.out.println("Dauer der TSP berechnungen: " + result + " ms");
+      System.out.println("Dauer der TSP berechnungen in ms:  " + result + " ms");
+      System.out.println("Dauer der TSP berechnungen in s:   " + result / 1000 + " s");
+      System.out.println("Dauer der TSP berechnungen in min: " + result / 1000 / 60 + " min");
 
       // Ausgabe des TSP
-      //printTSP(tsp);
+      // printTSP(tsp);
    }
 
 // This is a code fragment in the C programming language.
@@ -92,43 +86,45 @@ public class TSP
     *           2D Array mit allen Distanzen zwischen den Sternen.
     * @return Der TSP weg wird zurueckgegeben.
     */
-   public static List<Star> nearestNeighbourAlgorithm(List<Star> stars, double[][] starDist)
+   public static List<Star> nearestNeighbourAlgorithm(List<Star> stars)
    {
       Random rand = new Random();
-      
+
       Star currentStar = null;
-      int indexCurrentStar; 
-      
+      int indexCurrentStar;
+
       double completeDist = 0;
       List<Star> tsp = new ArrayList<Star>(stars.size());
       // 1. Initialize all vertices as unvisited.
       // 2. Select an arbitrary vertex, set it as the current vertex u. Mark u
       // as visited.
       int arbitraryNum = rand.nextInt(stars.size());
-      //int arbitraryNum = 3;
-      System.out.println(arbitraryNum + " Random Number");
+      // int arbitraryNum = 3;
+      System.out.println("Index des ersten Sternes ist: " + arbitraryNum);
       currentStar = stars.get(arbitraryNum);
       currentStar.setVisited(true);
       tsp.add(currentStar);
       indexCurrentStar = arbitraryNum;
+
+      double starDist;
       // 3. Find out the shortest edge connecting the current vertex u and an
       // unvisited vertex v.
-      for (int i = 0; i < starDist.length; i++)
+      for (int i = 0; i < stars.size(); i++)
       {
          int indexShortestEdge = 0;
-         //double shortestEdge = starDist[i][indexCurrentStar];
          double shortestEdge = Double.MAX_VALUE;
-         for (int j = 0; j < starDist.length; j++)
+         for (int j = 0; j < stars.size(); j++)
          {
-            // falsche auswahl der Distanx. statt starDist[i][j] muss die Distanz von currentStar zu stars.get(j)
-            if (shortestEdge > starDist[indexCurrentStar][j] && !stars.get(j).isVisited())
+            starDist = euclid3d_edgelen(stars.get(indexCurrentStar), stars.get(j));
+            if (shortestEdge > starDist && !stars.get(j).isVisited())
             {
                indexShortestEdge = j;
-               shortestEdge = starDist[indexCurrentStar][indexShortestEdge];
+               shortestEdge = starDist;
             }
          }
-         // wenn alle sterne besucht sind muss shortestEdge auf 0 gesetzt werden.
-         if(shortestEdge == Double.MAX_VALUE)
+         // wenn alle sterne besucht sind muss shortestEdge auf 0 gesetzt
+         // werden.
+         if (shortestEdge == Double.MAX_VALUE)
          {
             shortestEdge = 0;
          }
@@ -137,7 +133,7 @@ public class TSP
          tsp.add(currentStar);
          currentStar.setVisited(true);
          indexCurrentStar = indexShortestEdge;
-         System.out.println(shortestEdge);
+         // System.out.println(shortestEdge);
          completeDist += shortestEdge;
          // 5. If all the vertices in the domain are visited, then terminate.
          // Else, go to step 3.
@@ -162,23 +158,6 @@ public class TSP
          star.printCoordinates();
       }
 
-   }
-
-   private double[][] calcDists(List<Star> starList)
-   {
-      double[][] starDist = new double[starList.size()][starList.size()];
-      // Liste aller Distanzen
-      for (int y = 0; y < starList.size(); y++)
-      {
-         for (int x = 0; x < starList.size(); x++)
-         {
-            // starDist[x][y] =
-            // Main.euclid3d_edgelen_round(starList.get(5),
-            // starList.get(27));
-            starDist[x][y] = euclid3d_edgelen(starList.get(x), starList.get(y));
-         }
-      }
-      return starDist;
    }
 
 }
