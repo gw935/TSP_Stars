@@ -17,7 +17,7 @@ public class TSP
       ReadFile readFile = null;
       try
       {
-         readFile = new ReadFile(Main.FILENAME3);
+         readFile = new ReadFile(Main.FILENAME0);
       }
       catch (IOException e)
       {
@@ -41,20 +41,52 @@ public class TSP
 
       // Ausgabe des TSP
       // printTSP(tsp);
+
+      // ==========================Permutations============================
+      System.out.println("\n");
+      List<Star> modifireableStarList = new ArrayList<Star>();
+      for (Star star : starList)
+      {
+         modifireableStarList.add(star);
+      }
+
+      start = System.currentTimeMillis();
+      List<List<Star>> permutations = generatePerm(modifireableStarList);
+      result = System.currentTimeMillis() - start;
+
+      List<Double> distList = new ArrayList<Double>();
+      double bestDist = Double.MAX_VALUE;
+      // Liste aller Distanzen
+      for (int i = 0; i < permutations.size(); i++)
+      {
+         distList.add(calcDistancesOfList(permutations.get(i)));
+      }
+      for (Double double1 : distList)
+      {
+         if (bestDist > double1)
+         {
+            bestDist = double1;
+         }
+      }
+
+      System.out.println("Anzahl der Sterne: " + starList.size());
+      System.out.println("Anzahl der Permutationen: " + permutations.size());
+      System.out.println("Laufzeit der berechnung von Permutationen: " + result + " ms");
+      System.out.println("Die beste Distanz ist: " + bestDist);
    }
 
-// This is a code fragment in the C programming language.
-
-   // The coordinates for point i are stored as double (floating-point)
-   // numbers
-   // in the entries x[i], y[i], z[i].
-
-   // When C converts a double to an int (that is, integer), it rounds the
-   // value
-   // down. To obtain the TSPLIB rounding to the nearest integer, we add 0.5
-   // to
-   // the square-root value before casting it to an int.
-
+   /**
+    * 
+    * Diese Methode berechnet die Distanz von 2 Sternen, mit abrundung.
+    * Abgeaenderte Methode der Quelle:
+    * http://www.math.uwaterloo.ca/tsp/star/index.html
+    *
+    * @param star1
+    *           erster Stern.
+    * @param star2
+    *           zweiter Stern.
+    * @return Distanz von stern1 zu stern2.
+    */
    public static double euclid3d_edgelen_round(Star star1, Star star2)
    {
       double t1 = star1.getX() - star2.getX();
@@ -64,6 +96,17 @@ public class TSP
       return (int) (Math.sqrt(t1 * t1 + t2 * t2 + t3 * t3) + 0.5);
    }
 
+   /**
+    * 
+    * Diese Methode berechnet die Distanz von 2 Sternen. Abgeaenderte Methode
+    * der Quelle: http://www.math.uwaterloo.ca/tsp/star/index.html
+    *
+    * @param star1
+    *           erster Stern.
+    * @param star2
+    *           zweiter Stern.
+    * @return Distanz von stern1 zu stern2.
+    */
    public static double euclid3d_edgelen(Star star1, Star star2)
    {
       double t1 = star1.getX() - star2.getX();
@@ -75,10 +118,8 @@ public class TSP
 
    /**
     * 
-    * TODO: Offensichtlicher weise fehlerhaft.
-    * 
     * Implementierung des nearest Neighbour Algorithm mit worst case
-    * performance von O(N^2). (statt O Zeichen fuer worst case)
+    * performance von O(N^2). Der benutzte Speicherverbrauch betraegt 2n.
     *
     * @param stars
     *           Liste aller Sterne.
@@ -142,6 +183,13 @@ public class TSP
       return tsp;
    }
 
+   /**
+    * 
+    * Gibt alle Koordinaten der Sterne in der Liste von Sternen aus.
+    *
+    * @param starList
+    *           Liste von Sternen.
+    */
    private void printStars(List<Star> starList)
    {
       for (Star star : starList)
@@ -150,6 +198,12 @@ public class TSP
       }
    }
 
+   /**
+    * 
+    * Diese Methode gibt alle Koordinaten Sterne in der TSP Reinfolge an.
+    *
+    * @param tsp
+    */
    private void printTSP(List<Star> tsp)
    {
 
@@ -158,6 +212,57 @@ public class TSP
          star.printCoordinates();
       }
 
+   }
+
+   /**
+    * 
+    * Diese Methode berechnet alle Permutationen von Sternen.
+    *
+    * @param stars
+    *           ist eine Liste von Sternen.
+    * @return Liste von Listen von allen Permutationen.
+    */
+   public List<List<Star>> generatePerm(List<Star> stars)
+   {
+      if (stars.isEmpty())
+      {
+         List<List<Star>> result = new ArrayList<>();
+         result.add(new ArrayList<>());
+         return result;
+      }
+
+      Star firstElement = stars.remove(0);
+      List<List<Star>> returnValue = new ArrayList<>();
+      List<List<Star>> permutations = generatePerm(stars);
+      for (List<Star> smallerPermutated : permutations)
+      {
+         for (int index = 0; index <= smallerPermutated.size(); index++)
+         {
+            List<Star> temp = new ArrayList<>(smallerPermutated);
+            temp.add(index, firstElement);
+            returnValue.add(temp);
+         }
+      }
+      return returnValue;
+   }
+
+   /**
+    * 
+    * Berechnet die Distanz von allen Sternen in einer Liste.
+    *
+    * @param stars
+    *           Liste von Sternen.
+    * @return Distanz zwischen den Sternen.
+    */
+   public double calcDistancesOfList(List<Star> stars)
+   {
+      double dist = 0;
+      for (int i = 0; i < stars.size() - 1; i++)
+      {
+         dist += euclid3d_edgelen(stars.get(i), stars.get(i + 1));
+      }
+
+      return dist;
    }
 
 }
