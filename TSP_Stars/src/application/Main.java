@@ -1,5 +1,8 @@
 package application;
 
+import java.io.File;
+
+import application.ui.UIBorderPane;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -7,7 +10,10 @@ import javafx.scene.layout.BorderPane;
 
 public class Main extends Application
 {
-   // 4 Test Sterne
+   public static File FILE = null;
+   
+   /*
+   // 10 Test Sterne
    public final static String FILENAME0 = "res/test.txt";
 
    // 100 Sterne
@@ -24,19 +30,20 @@ public class Main extends Application
 
    // 119614 Sterne
    public final static String FILENAME5 = "res/hyg119614.xyz.txt";
+   */
 
    @Override
    public void start(Stage primaryStage)
    {
       try
       {
-         BorderPane root = new BorderPane();
+         BorderPane root = new UIBorderPane(primaryStage);
          Scene scene = new Scene(root, 400, 400);
          scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
          primaryStage.setScene(scene);
 
          // --------------Read File-------------------
-         TSP tsp = new TSP();
+         //TSP tsp = new TSP();
          // --------------Read File-------------------
 
          primaryStage.show();

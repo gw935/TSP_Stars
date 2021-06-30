@@ -25,29 +25,13 @@ public class ReadFile
    private File file;
 
    private List<Star> stars;
-
-   /**
-    * Oeffnet eine Datei mit dem uebergebenen Path und ruft die readFile()
-    * Methode auf.
-    * 
-    * @param path
-    *           Pfad einer Datei.
-    * @throws IOException
-    *            kommt von readFile().
-    */
-   public ReadFile(String path) throws IOException
+   
+   public void loadfile(File file)
    {
-      if (path == null)
+      if (file == null)
       {
          throw new IllegalArgumentException("Uebergebene Pfad ist null");
       }
-      if (path.isEmpty())
-      {
-         throw new IllegalArgumentException("Uebergebene Pfad ist leer");
-      }
-
-      File file = new File(path);
-
       if (!file.exists())
       {
          throw new IllegalArgumentException("Pfad existiert nicht.");
@@ -60,9 +44,9 @@ public class ReadFile
       {
          throw new IllegalArgumentException("Datei nicht lesbar.");
       }
-
       this.file = file;
-      this.stars = readFile();
+      
+      Main.FILE = file;
    }
 
    /**
@@ -71,8 +55,26 @@ public class ReadFile
     * @return Unmodifizierbare Liste mit Star Objekten.
     * @throws IOException
     */
-   private List<Star> readFile() throws IOException
+   public List<Star> readFile(File file) throws IOException
    {
+      if (file == null)
+      {
+         throw new IllegalArgumentException("Uebergebene Pfad ist null");
+      }
+      if (!file.exists())
+      {
+         throw new IllegalArgumentException("Pfad existiert nicht.");
+      }
+      if (!file.isFile())
+      {
+         throw new IllegalArgumentException("Ungueltiger Datei.");
+      }
+      if (!file.canRead())
+      {
+         throw new IllegalArgumentException("Datei nicht lesbar.");
+      }
+      this.file = file;
+
       stars = new ArrayList<Star>();
 
       String line = null;

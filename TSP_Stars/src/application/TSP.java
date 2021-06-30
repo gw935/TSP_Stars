@@ -15,14 +15,7 @@ public class TSP
 
       // Einlesen der Datei
       ReadFile readFile = null;
-      try
-      {
-         readFile = new ReadFile(Main.FILENAME0);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      readFile = new ReadFile();
 
       result1 = System.currentTimeMillis() - start1;
       System.out.println("Einlesen der Datei: " + result1 + " ms");
@@ -39,40 +32,6 @@ public class TSP
       System.out.println("Dauer der TSP berechnungen in s:   " + result / 1000 + " s");
       System.out.println("Dauer der TSP berechnungen in min: " + result / 1000 / 60 + " min");
 
-      // Ausgabe des TSP
-      // printTSP(tsp);
-
-      // ==========================Permutations============================
-      System.out.println("\n");
-      List<Star> modifireableStarList = new ArrayList<Star>();
-      for (Star star : starList)
-      {
-         modifireableStarList.add(star);
-      }
-
-      start = System.currentTimeMillis();
-      List<List<Star>> permutations = generatePerm(modifireableStarList);
-      result = System.currentTimeMillis() - start;
-
-      List<Double> distList = new ArrayList<Double>();
-      double bestDist = Double.MAX_VALUE;
-      // Liste aller Distanzen
-      for (int i = 0; i < permutations.size(); i++)
-      {
-         distList.add(calcDistancesOfList(permutations.get(i)));
-      }
-      for (Double double1 : distList)
-      {
-         if (bestDist > double1)
-         {
-            bestDist = double1;
-         }
-      }
-
-      System.out.println("Anzahl der Sterne: " + starList.size());
-      System.out.println("Anzahl der Permutationen: " + permutations.size());
-      System.out.println("Laufzeit der berechnung von Permutationen: " + result + " ms");
-      System.out.println("Die beste Distanz ist: " + bestDist);
    }
 
    /**
