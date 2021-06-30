@@ -1,94 +1,28 @@
 package application;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class TSP
 {
+   private List<Star> starList;
+
+   private List<Star> result;
+
+   private Random rand;
+
+   private double shortestDist;
 
    public TSP()
    {
-      long start1, result1;
-      start1 = System.currentTimeMillis();
-
-      // Einlesen der Datei
-      ReadFile readFile = null;
-      readFile = new ReadFile();
-
-      result1 = System.currentTimeMillis() - start1;
-      System.out.println("Einlesen der Datei: " + result1 + " ms");
-
-      List<Star> starList = readFile.getListOfStars();
-      // printStars(starList);
-
-      // TSP berechnen und zeitmessung
-      long start, result;
-      start = System.currentTimeMillis();
-      List<Star> tsp = nearestNeighbourAlgorithm(starList);
-      result = System.currentTimeMillis() - start;
-      System.out.println("Dauer der TSP berechnungen in ms:  " + result + " ms");
-      System.out.println("Dauer der TSP berechnungen in s:   " + result / 1000 + " s");
-      System.out.println("Dauer der TSP berechnungen in min: " + result / 1000 / 60 + " min");
-
+      rand = new Random();
    }
 
-   /**
-    * 
-    * Diese Methode berechnet die Distanz von 2 Sternen, mit abrundung.
-    * Abgeaenderte Methode der Quelle:
-    * http://www.math.uwaterloo.ca/tsp/star/index.html
-    *
-    * @param star1
-    *           erster Stern.
-    * @param star2
-    *           zweiter Stern.
-    * @return Distanz von stern1 zu stern2.
-    */
-   public static double euclid3d_edgelen_round(Star star1, Star star2)
+   public List<Star> nearestNeighbourAlgorithm(List<Star> stars)
    {
-      double t1 = star1.getX() - star2.getX();
-      double t2 = star1.getY() - star2.getY();
-      double t3 = star1.getZ() - star2.getZ();
-
-      return (int) (Math.sqrt(t1 * t1 + t2 * t2 + t3 * t3) + 0.5);
-   }
-
-   /**
-    * 
-    * Diese Methode berechnet die Distanz von 2 Sternen. Abgeaenderte Methode
-    * der Quelle: http://www.math.uwaterloo.ca/tsp/star/index.html
-    *
-    * @param star1
-    *           erster Stern.
-    * @param star2
-    *           zweiter Stern.
-    * @return Distanz von stern1 zu stern2.
-    */
-   public static double euclid3d_edgelen(Star star1, Star star2)
-   {
-      double t1 = star1.getX() - star2.getX();
-      double t2 = star1.getY() - star2.getY();
-      double t3 = star1.getZ() - star2.getZ();
-
-      return Math.sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-   }
-
-   /**
-    * 
-    * Implementierung des nearest Neighbour Algorithm mit worst case
-    * performance von O(N^2). Der benutzte Speicherverbrauch betraegt 2n.
-    *
-    * @param stars
-    *           Liste aller Sterne.
-    * @param starDist
-    *           2D Array mit allen Distanzen zwischen den Sternen.
-    * @return Der TSP weg wird zurueckgegeben.
-    */
-   public static List<Star> nearestNeighbourAlgorithm(List<Star> stars)
-   {
-      Random rand = new Random();
+      long startTime, resultTime;
+      startTime = System.currentTimeMillis();
 
       Star currentStar = null;
       int indexCurrentStar;
@@ -139,89 +73,35 @@ public class TSP
          // Else, go to step 3.
       }
       System.out.println("Completer Weg: " + completeDist + " Laengeneinheiten");
-      return tsp;
+
+      resultTime = System.currentTimeMillis() - startTime;
+      System.out.println("Dauer der TSP berechnungen in ms:  " + resultTime + " ms");
+      System.out.println("Dauer der TSP berechnungen in s:   " + resultTime / 1000 + " s");
+      System.out.println("Dauer der TSP berechnungen in min: " + resultTime / 1000 / 60 + " min");
+
+      result = tsp;
+      shortestDist = completeDist;
+
+      return result;
    }
 
-   /**
-    * 
-    * Gibt alle Koordinaten der Sterne in der Liste von Sternen aus.
-    *
-    * @param starList
-    *           Liste von Sternen.
-    */
-   private void printStars(List<Star> starList)
+   public static double euclid3d_edgelen(Star star1, Star star2)
    {
-      for (Star star : starList)
-      {
-         star.printCoordinates();
-      }
+      double t1 = star1.getX() - star2.getX();
+      double t2 = star1.getY() - star2.getY();
+      double t3 = star1.getZ() - star2.getZ();
+
+      return Math.sqrt(t1 * t1 + t2 * t2 + t3 * t3);
    }
 
-   /**
-    * 
-    * Diese Methode gibt alle Koordinaten Sterne in der TSP Reinfolge an.
-    *
-    * @param tsp
-    */
-   private void printTSP(List<Star> tsp)
+   public double getShortestDist()
    {
-
-      for (Star star : tsp)
-      {
-         star.printCoordinates();
-      }
-
+      return shortestDist;
    }
 
-   /**
-    * 
-    * Diese Methode berechnet alle Permutationen von Sternen.
-    *
-    * @param stars
-    *           ist eine Liste von Sternen.
-    * @return Liste von Listen von allen Permutationen.
-    */
-   public List<List<Star>> generatePerm(List<Star> stars)
+   public List getResultList()
    {
-      if (stars.isEmpty())
-      {
-         List<List<Star>> result = new ArrayList<>();
-         result.add(new ArrayList<>());
-         return result;
-      }
-
-      Star firstElement = stars.remove(0);
-      List<List<Star>> returnValue = new ArrayList<>();
-      List<List<Star>> permutations = generatePerm(stars);
-      for (List<Star> smallerPermutated : permutations)
-      {
-         for (int index = 0; index <= smallerPermutated.size(); index++)
-         {
-            List<Star> temp = new ArrayList<>(smallerPermutated);
-            temp.add(index, firstElement);
-            returnValue.add(temp);
-         }
-      }
-      return returnValue;
-   }
-
-   /**
-    * 
-    * Berechnet die Distanz von allen Sternen in einer Liste.
-    *
-    * @param stars
-    *           Liste von Sternen.
-    * @return Distanz zwischen den Sternen.
-    */
-   public double calcDistancesOfList(List<Star> stars)
-   {
-      double dist = 0;
-      for (int i = 0; i < stars.size() - 1; i++)
-      {
-         dist += euclid3d_edgelen(stars.get(i), stars.get(i + 1));
-      }
-
-      return dist;
+      return result;
    }
 
 }

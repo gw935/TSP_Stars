@@ -2,6 +2,7 @@ package application;
 
 public class Star
 {
+
    private double x;
 
    private double y;
@@ -102,9 +103,9 @@ public class Star
       this.isVisited = isVisited;
    }
 
-   public void printCoordinates()
+   public String printCoordinates()
    {
-      System.out.printf("|X: %16f|Y: %16f|Z: %16f|\n", x, y, z);
+      return String.format("|  X: %16f  |  Y: %16f  |  Z: %16f  |\n", x, y, z);
    }
 
 }

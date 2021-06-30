@@ -8,53 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
-/**
- * Woerter uebergeben und in eine TreeMap schreiben.
- * 
- * @author Gin-Wah Chau
- *
- */
-public class ReadFile
+public class StarFileReader
 {
    public final String REGEX = "\s";
 
-   private File file;
-
-   private List<Star> stars;
-   
-   public void loadfile(File file)
-   {
-      if (file == null)
-      {
-         throw new IllegalArgumentException("Uebergebene Pfad ist null");
-      }
-      if (!file.exists())
-      {
-         throw new IllegalArgumentException("Pfad existiert nicht.");
-      }
-      if (!file.isFile())
-      {
-         throw new IllegalArgumentException("Ungueltiger Datei.");
-      }
-      if (!file.canRead())
-      {
-         throw new IllegalArgumentException("Datei nicht lesbar.");
-      }
-      this.file = file;
-      
-      Main.FILE = file;
-   }
-
-   /**
-    * Liest alle Zeilen einer Datei und fuellt eine Liste mit Star Objecten.
-    * 
-    * @return Unmodifizierbare Liste mit Star Objekten.
-    * @throws IOException
-    */
    public List<Star> readFile(File file) throws IOException
    {
       if (file == null)
@@ -73,10 +31,8 @@ public class ReadFile
       {
          throw new IllegalArgumentException("Datei nicht lesbar.");
       }
-      this.file = file;
 
-      stars = new ArrayList<Star>();
-
+      List<Star> stars = new ArrayList<Star>();
       String line = null;
 
       BufferedReader reader = null;
@@ -112,16 +68,6 @@ public class ReadFile
          }
       }
 
-      return Collections.unmodifiableList(stars);
-   }
-
-   /**
-    * Gibt eine unmodifizierbares Liste mit allen Star Objekten zurueck.
-    * 
-    * @return Eine unmodifizierbare Liste mit allen Star Objekten.
-    */
-   public List<Star> getListOfStars()
-   {
       return Collections.unmodifiableList(stars);
    }
 
