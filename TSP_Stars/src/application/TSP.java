@@ -99,7 +99,7 @@ public class TSP
       return shortestDist;
    }
 
-   public List getResultList()
+   public List<Star> getResultList()
    {
       return result;
    }
