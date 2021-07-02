@@ -16,6 +16,8 @@ import javafx.stage.Window;
 
 public class TSPController
 {
+   // TODO: LineChart statt den 3 TextAreas
+   
    @FXML // ResourceBundle that was given to the FXMLLoader
    private ResourceBundle resources;
 
